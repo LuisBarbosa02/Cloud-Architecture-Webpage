@@ -36,7 +36,7 @@ Resources:
           ForwardedValues:
             QueryString: true
             Cookies:
-                Forward: none
+              Forward: none
         Enabled: true
         Origins:
           - DomainName: !GetAtt S3Bucket.RegionalDomainName
@@ -60,6 +60,13 @@ Resources:
             Principal:
               AWS: !Sub arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity
                 ${CloudFrontDistributionOriginAccessIdentity}
+            Action: s3:GetObject
+            Resource: !Sub
+              - ${BucketArn}/*
+              - BucketArn: !GetAtt S3Bucket.Arn
+          - Sid: PublicRead
+            Effect: Allow
+            Principal: "*"
             Action: s3:GetObject
             Resource: !Sub
               - ${BucketArn}/*
